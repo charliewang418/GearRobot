@@ -80,10 +80,10 @@ set(gca, 'NextPlot', 'replace');
 % opengl('software');
 mf = 'Files/Roll';
 mov = VideoWriter(mf, 'MPEG-4');
-mov.FrameRate = 5;
+mov.FrameRate = 10;
 open(mov);
 
-for nt = 1:50
+for nt = 1:500
     x = zeros(N, 1);
     y = zeros(N, 1);
     for ng = 1:Ng
