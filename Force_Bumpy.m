@@ -4,12 +4,18 @@ Ng = Epara.Ng;
 Ns = Epara.Ns;
 N = Epara.N;
 K = Epara.K;
+Ka_ratio = Epara.Ka_ratio;
 F_grav = Epara.F_grav;
 Rg = Epara.Rg;
 % Rb = Epara.Rb;
 Db = Epara.Db;
+a_cut_c = Epara.a_cut_c;
 idx_start = Epara.idx_start;
 idx_end = Epara.idx_end;
+
+Db_a = a_cut_c * Db;
+Db_h = 0.5 * (1 + a_cut_c) * Db;
+Ka = K * Ka_ratio;
 
 % Eval = 0;
 dtheta = 2 * pi / Ns;
@@ -40,12 +46,18 @@ for ng = 1:Ng-1
         for mg = ng+1:Ng
             for ms = idx_start(mg):idx_end(mg)
                 dx = x(ms) - x1;
-                if abs(dx) < Db
+                if abs(dx) < Db_a
                     dy = y(ms) - y1;
-                    if abs(dy) < Db
+                    if abs(dy) < Db_a
                         d = sqrt(dx^2 + dy^2);
-                        if d < Db
-                            F = K * (Db / d - 1);
+                        if d < Db_a
+                            if d < Db
+                                F = K * (Db / d - 1);
+                            elseif d < Db_h
+                                F = Ka * (Db / d - 1);
+                            else
+                                F = Ka * (1 - Db_a / d);
+                            end
                             dFx = F * dx;
                             dFy = F * dy;
 %                             Eval = Eval + 0.5 * K * (1 - d / Db)^2;  % cell-cell PE
